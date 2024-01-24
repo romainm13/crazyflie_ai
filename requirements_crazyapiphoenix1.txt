@@ -1,0 +1,10 @@
+# Phoenix
+numpy
+pandas
+pybullet
+gym<=0.20.0
+scipy>=1.4
+mpi4py
+psutil
+joblib
+tensorboard
