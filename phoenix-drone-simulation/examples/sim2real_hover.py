@@ -1,6 +1,23 @@
 #%%
 """
 TODO
+
+PHASE 1
+SE demander à quels niveaux on discute
+- avec le drone
+- avec le modele reinflearn/envrionment simulation
+
+D'abord se demander à quel niveau le drone est le plus précis ?
+-> altitude rate
+
+Donc discuter à ce niveau là
+
+PHASE 2: Domain randonmisation
+Faire varier les paramètres du drone pour voir si le modèle est capable de s'adapter
+Modifier le simulateurs pour qu'il fit avec le drone dans la réalité
+-> jouer sur délai de latence entre le simulateur et le drone
+-> jouer sur la masse du drone
+-> jouer sur la taille du drone
 """
 
 ############

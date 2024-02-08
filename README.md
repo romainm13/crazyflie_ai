@@ -2,13 +2,13 @@
 
 ## Context
 
-Ce repo permet de faire voler un Crazyflie 2.1 avec phoenix-drone-simulation et l'API Crazyflie.
+Ce repo permet de faire voler un Crazyflie 2.1 avec **phoenix-drone-simulation** et l'**API Crazyflie**.
 
-1. Tout d'abord, il faut installer phoenix-drone-simulation et faire des tests d'entrainement avec l'environnement de simulation. C'est la partie simulation et IA.
+1. Tout d'abord, il faut installer phoenix-drone-simulation et faire des tests d'entrainement avec l'environnement de simulation. **C'est la partie simulation et IA**.
 
-2. Ensuite, il faut installer l'API Crazyflie et le client cfclient, et faire des tests de connexion et de vol avec le Crazyflie (CrazyRadio, LIghthouse system, etc.). C'est la partie robotique et setup du Crazyflie/Hardware.
+2. Ensuite, il faut installer l'API Crazyflie et le client cfclient, et faire des tests de connexion et de vol avec le Crazyflie (CrazyRadio, LIghthouse system, etc.). **C'est la partie robotique et setup du Crazyflie/Hardware**.
 
-3. Enfin, il faut connecter l'API Crazyflie avec phoenix-drone-simulation et faire des tests de chargement de modèle et de vol avec le Crazyflie.
+3. Enfin, il faut connecter l'API Crazyflie avec phoenix-drone-simulation et faire des tests de chargement de modèle et de vol avec le Crazyflie. **C'est la partie Sim2Real**.
 
 ***Conseil: utiliser un environnement virtuel conda pour installer tous les packages python au même endroit.***
 
@@ -17,6 +17,8 @@ Ce repo permet de faire voler un Crazyflie 2.1 avec phoenix-drone-simulation et 
 We first decided to use Windows OS because of the compatibility with the Crazyflie API (USB driver for the USB radio dongle).
 
 ### 1. Setup phoenix-drone-simulation (AI)
+
+*The git repository of phoenix-drone-simulation is already cloned in this repo in order to have the working commit before Cyril's way.*
 
 #### Cyril's way - Gymnasium (NOT WORKING)
 
@@ -47,6 +49,8 @@ Here is the commit before Cyril's way: https://github.com/SvenGronauer/phoenix-d
 - pip install -e .
 
 ### 2. Setup Crazyflie API (Robotics)
+
+*Note: The git repository of crazyflie-lib-python and crazyflie-fireware are already cloned in this repo to avoid any compatibility issues.*
 
 First install the **Crazyflie lib python**, still in the conda virtual environment.
 
@@ -108,7 +112,66 @@ Une fois que le calibrage est fait, les infos du LightHouse Deck sont stockées 
       PowerSwitch(uri).stm_power_cycle()
     ```
 
-### 3. Connect Crazyflie API with phoenix-drone-simulation
+## Arbre du projet
 
-On doit écrire un code python qui permet de connecter l'API Crazyflie avec phoenix-drone-simulation.
+```bash
+.
+├── README.md
+├── crazyflie-firmware
+├── crazyflie-lib-python
+├── phoenix-drone-simulation
+└── scripts_fly
+    └── autonomous (Scripts to fly the Crazyflie)
+        └── autonomousSequence.py
+    └── motors (Scripts to test the motors)
+        └── ramp.py
+    └── connect_log_param.py (test the connection with the Crazyflie)
+├── launch.json
+├── Reinforcement Learning-Based Control of CrazyFlie 2.X Quadrotor.pdf (Paper)
+├── requirements_crazyapiphoenix1.txt (Before Cyril's way, working)
+└── requirements_crazyapiphoenix2.txt (Cyril's way, not working)
+```
 
+## Launch
+
+### 1. Run phoenix-drone-simulation (AI)
+
+Les scripts python pour l'entrainement et les tests sont dans le dossier `phoenix-drone-simulation/examples/`:
+
+- Le script `train_with_multi_cores.py` permet d'entrainer un modèle de RL avec l'environnement gym avec plusieurs coeurs.
+- Le script `train_and_charge.py` permet de charger un modèle pré-entrainé et de le tester.
+- Le dossier `phoenix-drone-simulation/results/` contient un exemple de résultat d'entrainement.
+
+### 2. Run Crazyflie API (Robotics)
+
+Les scripts python pour tester la connexion et le vol du Crazyflie sont dans le dossier `scripts_fly/`:
+
+- Le script `connect_log_param.py` permet de tester la connexion avec le Crazyflie et de récupérer les logs et les paramètres.
+- Le script `autonomous/autonomousSequence.py` permet de faire voler le Crazyflie avec le LightHouse Deck en définissant une séquence de vol.
+
+```python
+# Change the sequence according to your setup
+#             x    y    z  YAW
+sequence = [
+    (0.0, 0.0, 0.5, 0),
+    (0.0, 0.0, 1.0, 0),
+    (0.5, -0.5, 1.0, 0),
+    (0.5, 0.0, 1.0, 0),
+    (0.0, 0.0, 1.0, 0),
+    (0.0, 0.0, 0.5, 0),
+    (0.0, 0.0, 0.0, 0),
+]
+```
+
+### 3. Connect Crazyflie API with phoenix-drone-simulation (Sim2Real)
+
+On doit écrire un code python qui permet de connecter l'API Crazyflie avec phoenix-drone-simulation. Celui-ci doit charger un modèle pré-entrainé et le tester avec le Crazyflie. Le script se trouve à `phoenix-drone-simulation/examples/sim2real_hover.py`.
+
+Le script `sim2real_hover.py` est presque fonctionnel. Il faut juste comprendre comment envoyer les observations du drone réel dans l'actor critic et réponses aux problématiques suivantes:
+
+- Comprendre c’est quoi les 21 autres valeurs dans `obs` renvoyés par l’environnement gym. Afin de remplir les 13 valeurs recupérés du drone réels et envoyer tout ça dans l’actor crtitic
+- Qu'est ce que `action, _, _ = ac.step(obs_tensor)` ?
+
+## TODO
+
+Fix the `sim2real_hover.py` script to connect the Crazyflie API with phoenix-drone-simulation.

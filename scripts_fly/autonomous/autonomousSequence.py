@@ -40,9 +40,6 @@ from cflib.crazyflie.syncCrazyflie import SyncCrazyflie
 from cflib.crazyflie.syncLogger import SyncLogger
 from cflib.utils import uri_helper
 
-#
-
-
 # Change the sequence according to your setup
 #             x    y    z  YAW
 sequence = [

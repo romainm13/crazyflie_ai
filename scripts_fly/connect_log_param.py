@@ -40,12 +40,6 @@ INFO:cflib.crtp.prrtdriver:Initialized PRRT driver.
 DEBUG:cflib.crtp:Scanning: <class 'cflib.crtp.tcpdriver.TcpDriver'>
 Crazyflies found: []
 """ 
-#%%
-crazyflie = Crazyflie()
-crazyflie.connected.add_callback(crazyflie_connected)
-crazyflie.open_link("radio://0/10/2M")
-
-crazyflie.close_link()
 
 #%%
 # URI to the Crazyflie to connect to
@@ -61,6 +55,7 @@ serial://ttyAMA0 : Serial port, id ttyAMA0
 tcp://aideck-AABBCCDD.local:5000 : TCP network connection, Name: aideck-AABBCCDD.local, port 5000
 """
 uri = uri_helper.uri_from_env(default='radio://0/80/2M/E7E7E7E7E7')
+
 # URI to the Crazyflie to connect to
 uri = 'radio://0/80/2M/E7E7E7E7E7'
 
@@ -75,4 +70,3 @@ if __name__ == '__main__':
     
     with SyncCrazyflie(uri, cf=Crazyflie(rw_cache='./cache')) as scf:
         simple_connect()
-# %%
