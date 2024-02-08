@@ -20,30 +20,16 @@ We first decided to use Windows OS because of the compatibility with the Crazyfl
 
 *The git repository of phoenix-drone-simulation is already cloned in this repo in order to have the working commit before Cyril's way.*
 
-#### Cyril's way - Gymnasium (NOT WORKING)
+*Here is the commit before Cyril's way: https://github.com/SvenGronauer/phoenix-drone-simulation/tree/282bcc6a7f7d483e638a07336350809b42eee719 that works with the requirements_crazyapiphoenix.txt file.*
+
+#### Setup Conda Virtual Environment
 
 - Install miniconda3 windows
 - Go to bash terminal Windows
 - conda create --name phoenix_drone python=3.8
 - conda activate phoenix_drone
 - conda config --env --add channels conda-forge
-- conda install --yes --file requirements_crazyapiphoenix2.txt
-- conda install --yes pytorch torchvision cpuonly -c pytorch
-- pip install gymnasium>=0.29.1
-- pip install cfclient
-- cd phoenix-drone-simulation
-- pip install -e .
-
-#### Before Cyril's way (WORKING)
-
-Here is the commit before Cyril's way: https://github.com/SvenGronauer/phoenix-drone-simulation/tree/282bcc6a7f7d483e638a07336350809b42eee719
-
-- Install miniconda3 windows
-- Go to bash terminal Windows
-- conda create --name phoenix_drone python=3.8
-- conda activate phoenix_drone
-- conda config --env --add channels conda-forge
-- conda install --yes --file requirements_crazyapiphoenix1.txt
+- conda install --yes --file requirements_crazyapiphoenix.txt
 - conda install --yes pytorch torchvision cpuonly -c pytorch
 - cd phoenix-drone-simulation
 - pip install -e .
@@ -128,8 +114,7 @@ Once calibration is done, the Lighthouse Deck's information is stored in the Cra
     └── connect_log_param.py (test the connection with the Crazyflie)
 ├── launch.json
 ├── Reinforcement Learning-Based Control of CrazyFlie 2.X Quadrotor.pdf (Paper)
-├── requirements_crazyapiphoenix1.txt (Before Cyril's way, working)
-└── requirements_crazyapiphoenix2.txt (Cyril's way, not working)
+└── requirements_crazyapiphoenix.txt
 ```
 
 ## Launch
