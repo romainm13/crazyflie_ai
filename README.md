@@ -2,19 +2,19 @@
 
 ## Context
 
-Ce repo permet de faire voler un Crazyflie 2.1 avec **phoenix-drone-simulation** et l'**API Crazyflie**.
+This repository allows flying a Crazyflie 2.1 with **phoenix-drone-simulation** and the **Crazyflie API**.
 
-1. Tout d'abord, il faut installer phoenix-drone-simulation et faire des tests d'entrainement avec l'environnement de simulation. **C'est la partie simulation et IA**.
+1. First, you need to install phoenix-drone-simulation and run training tests with the simulation environment. **This is the simulation and AI part**.
 
-2. Ensuite, il faut installer l'API Crazyflie et le client cfclient, et faire des tests de connexion et de vol avec le Crazyflie (CrazyRadio, LIghthouse system, etc.). **C'est la partie robotique et setup du Crazyflie/Hardware**.
+2. Then, install the Crazyflie API and the cfclient, and perform connection and flight tests with the Crazyflie (CrazyRadio, Lighthouse system, etc.). **This is the robotics and Crazyflie/Hardware setup part**.
 
-3. Enfin, il faut connecter l'API Crazyflie avec phoenix-drone-simulation et faire des tests de chargement de modèle et de vol avec le Crazyflie. **C'est la partie Sim2Real**.
-
-***Conseil: utiliser un environnement virtuel conda pour installer tous les packages python au même endroit.***
+3. Finally, connect the Crazyflie API with phoenix-drone-simulation and run model loading and flight tests with the Crazyflie. **This is the Sim2Real part**.
 
 ## Setup (On Windows OS)
 
 We first decided to use Windows OS because of the compatibility with the Crazyflie API (USB driver for the USB radio dongle).
+
+*Advice: use a conda virtual environment to install all the python packages in the same place.*
 
 ### 1. Setup phoenix-drone-simulation (AI)
 
@@ -79,17 +79,17 @@ https://www.bitcraze.io/documentation/repository/crazyflie-lib-python/master/use
 
 **Troubleshooting:**
 
-Si problème de connexion par USB radio c'est peut-être un pb de firmware ! Il faut connecter le crazyflie par cable USB, ouvrir le cfclient, et essayer de reboot ou de mettre à jour le firmware
+If there's a problem with the USB radio connection, it might be a firmware issue! You need to connect the Crazyflie via USB cable, open the cfclient, and try to reboot or update the firmware.
 
 #### Configure LightHouse Deck
 
-Dernière étape, il faut configurer le Crazyflie pour qu'il puisse se connecter au système Lighthouse pour la localisation.
+The last step is to configure the Crazyflie to connect to the Lighthouse system for localization.
 
-Vidéo de configuration du Crazyflie: [Youtube video - LightHouse Deck](https://www.youtube.com/watch?v=DCEHht72B08)
+Configuration video of Crazyflie: [Youtube video - LightHouse Deck](https://www.youtube.com/watch?v=DCEHht72B08)
 
-Une fois que le calibrage est fait, les infos du LightHouse Deck sont stockées dans le Crazyflie. Le cfclient peut donc être fermé. Il est ensuite possible d'exécuter du code python pour faire voler le Crazyflie tel que `/scripts_fly/autonomous/autonomousSequence.py`.
+Once calibration is done, the Lighthouse Deck's information is stored in the Crazyflie. The cfclient can then be closed. It is then possible to execute Python code to fly the Crazyflie such as `/scripts_fly/autonomous/autonomousSequence.py`.
 
-**Autre:**
+**Other:**
 
 - Reboot le Crazyflie via du code et la radio USB
   - Git clone crazyflie-firmware repo
@@ -112,9 +112,9 @@ Une fois que le calibrage est fait, les infos du LightHouse Deck sont stockées 
       PowerSwitch(uri).stm_power_cycle()
     ```
 
-## Arbre du projet
+## Project Tree
 
-```bash
+```text
 .
 ├── README.md
 ├── crazyflie-firmware
@@ -136,18 +136,18 @@ Une fois que le calibrage est fait, les infos du LightHouse Deck sont stockées 
 
 ### 1. Run phoenix-drone-simulation (AI)
 
-Les scripts python pour l'entrainement et les tests sont dans le dossier `phoenix-drone-simulation/examples/`:
+Python scripts for training and tests are in the `phoenix-drone-simulation/examples/` folder:
 
-- Le script `train_with_multi_cores.py` permet d'entrainer un modèle de RL avec l'environnement gym avec plusieurs coeurs.
-- Le script `train_and_charge.py` permet de charger un modèle pré-entrainé et de le tester.
-- Le dossier `phoenix-drone-simulation/results/` contient un exemple de résultat d'entrainement.
+- The script `train_with_multi_cores.py` allows training an RL model with the gym environment using multiple cores.
+- The script `train_and_charge.py` allows loading a pre-trained model and testing it.
+- The `phoenix-drone-simulation/results/` folder contains an example of training results.
 
 ### 2. Run Crazyflie API (Robotics)
 
-Les scripts python pour tester la connexion et le vol du Crazyflie sont dans le dossier `scripts_fly/`:
+Python scripts for testing the connection and flight of the Crazyflie are in the`scripts_fly/` folder:
 
-- Le script `connect_log_param.py` permet de tester la connexion avec le Crazyflie et de récupérer les logs et les paramètres.
-- Le script `autonomous/autonomousSequence.py` permet de faire voler le Crazyflie avec le LightHouse Deck en définissant une séquence de vol.
+- The script `connect_log_param.py` allows testing the connection with the Crazyflie and retrieving logs and parameters.
+- The script `autonomous/autonomousSequence.py` allows flying the Crazyflie with the Lighthouse Deck by defining a flight sequence.
 
 ```python
 # Change the sequence according to your setup
@@ -165,12 +165,12 @@ sequence = [
 
 ### 3. Connect Crazyflie API with phoenix-drone-simulation (Sim2Real)
 
-On doit écrire un code python qui permet de connecter l'API Crazyflie avec phoenix-drone-simulation. Celui-ci doit charger un modèle pré-entrainé et le tester avec le Crazyflie. Le script se trouve à `phoenix-drone-simulation/examples/sim2real_hover.py`.
+You need to write Python code that connects the Crazyflie API with phoenix-drone-simulation. This code should load a pre-trained model and test it with the Crazyflie. The script is found at `phoenix-drone-simulation/examples/sim2real_hover.py`.
 
-Le script `sim2real_hover.py` est presque fonctionnel. Il faut juste comprendre comment envoyer les observations du drone réel dans l'actor critic et réponses aux problématiques suivantes:
+The `sim2real_hover.py` script is almost functional. It's necessary to understand how to send the real drone's observations into the actor-critic and address the following issues:
 
-- Comprendre c’est quoi les 21 autres valeurs dans `obs` renvoyés par l’environnement gym. Afin de remplir les 13 valeurs recupérés du drone réels et envoyer tout ça dans l’actor crtitic
-- Qu'est ce que `action, _, _ = ac.step(obs_tensor)` ?
+- Understanding what the 21 other values in obs returned by the gym environment are. In order to fill in the 13 values retrieved from the real drone and send all this to the actor-critic
+- What does `action, _, _ = ac.step(obs_tensor)` mean and return?
 
 ## TODO
 
