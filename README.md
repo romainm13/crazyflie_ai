@@ -160,3 +160,9 @@ The `sim2real_hover.py` script is almost functional. It's necessary to understan
 ## TODO
 
 Fix the `sim2real_hover.py` script to connect the Crazyflie API with phoenix-drone-simulation.
+
+## AUTHORS
+
+May OUIR, Ecole des Mines de Nancy
+Romain MAILLARD, Ecole des Mines de Nancy
+Benjamin ZHU, Ecole des Mines de Nancy
